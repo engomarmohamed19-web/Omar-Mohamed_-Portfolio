@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عمر محمد | Video Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --card: #161616;
+    --accent: #ff3b00;
+    --accent2: #ff7a00;
+    --gold: #ffd700;
+    --text: #f0f0f0;
+    --muted: #888;
+    --border: #222;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Cairo', sans-serif;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 3px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--accent); }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(255,59,0,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 80% 30%, rgba(255,122,0,0.08) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,59,0,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,59,0,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .profile-ring {
+    position: relative;
+    width: 160px;
+    height: 160px;
+  }
+
+  .profile-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent), var(--accent2), var(--gold), var(--accent));
+    animation: spin 4s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .profile-ring::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+
+  .profile-img-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1c1c1c, #2a2a2a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    background: rgba(255,59,0,0.15);
+    border: 1px solid rgba(255,59,0,0.3);
+    color: var(--accent);
+    padding: 0.3rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: fadeUp 0.8s ease 0.2s both;
+  }
+
+  .hero-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3rem, 10vw, 7rem);
+    line-height: 1;
+    letter-spacing: 4px;
+    animation: fadeUp 0.8s ease 0.4s both;
+  }
+
+  .hero-name span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-title {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: var(--muted);
+    font-weight: 300;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    animation: fadeUp 0.8s ease 0.6s both;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 0.5rem;
+    animation: fadeUp 0.8s ease 0.8s both;
+  }
+
+  .stat { text-align: center; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s ease 1s both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: white;
+    padding: 0.9rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(255,59,0,0.3);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255,59,0,0.5);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    padding: 0.9rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    border: 1px solid var(--border);
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    letter-spacing: 2px;
+    margin-bottom: 3rem;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+
+  .skill-card:hover {
+    border-color: rgba(255,59,0,0.3);
+    transform: translateY(-4px);
+  }
+
+  .skill-card:hover::before { transform: scaleX(1); }
+
+  .skill-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+
+  .skill-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .video-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .video-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  }
+
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: linear-gradient(135deg, #1a1a1a, #222);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-thumb iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  .video-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    background: linear-gradient(135deg, #161616, #1e1e1e);
+  }
+
+  .play-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(255,59,0,0.2);
+    border: 2px solid rgba(255,59,0,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  .video-info { padding: 1.2rem; }
+
+  .video-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .video-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+  }
+
+  .video-desc {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .contact-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 700px) {
+    .contact-wrapper { grid-template-columns: 1fr; }
+  }
+
+  .contact-info p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.8rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .contact-item:hover {
+    border-color: rgba(255,59,0,0.3);
+    background: rgba(255,59,0,0.05);
+  }
+
+  .contact-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .contact-text { flex: 1; }
+  .contact-platform { font-size: 0.72rem; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .contact-handle { font-size: 0.9rem; font-weight: 700; }
+
+  .social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border);
+  }
+
+  .social-link:hover { transform: translateX(-5px); }
+
+  .social-link.facebook { background: rgba(24,119,242,0.1); border-color: rgba(24,119,242,0.2); }
+  .social-link.facebook:hover { background: rgba(24,119,242,0.15); box-shadow: -4px 0 0 #1877f2; border-color: #1877f2; }
+
+  .social-link.youtube { background: rgba(255,0,0,0.1); border-color: rgba(255,0,0,0.2); }
+  .social-link.youtube:hover { background: rgba(255,0,0,0.15); box-shadow: -4px 0 0 #ff0000; border-color: #ff0000; }
+
+  .social-link.tiktok { background: rgba(0,242,234,0.08); border-color: rgba(0,242,234,0.15); }
+  .social-link.tiktok:hover { background: rgba(0,242,234,0.12); box-shadow: -4px 0 0 #00f2ea; border-color: #00f2ea; }
+
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .social-link-label { flex: 1; }
+  .social-link-sub { font-size: 0.72rem; color: var(--muted); font-weight: 400; }
+  .social-arrow { color: var(--muted); font-size: 1rem; }
+
+  svg { display: block; }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+
+  footer span { color: var(--accent); }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">OMAR.M</div>
+  <ul class="nav-links">
+    <li><a href="#about">عني</a></li>
+    <li><a href="#portfolio">أعمالي</a></li>
+    <li><a href="#contact">تواصل</a></li>
+  </ul>
+</nav>
+
+<div class="hero" id="about">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-content">
+
+    <div class="profile-ring">
+      <!-- ضع صورتك هنا: استبدل الـ div بـ <img src="صورتك.jpg" ...> -->
+<img src="WhatsApp Image 2026-02-05 at 4.28.47 PM.jpeg" style="width:100%;height:100%;border-radius:50%;object-fit:cover;position:relative;z-index:1;">    </div>
+
+    <div class="hero-badge">Video Editor · Creator</div>
+    <h1 class="hero-name">Omar <span>Mohamed</span></h1>
+    <p class="hero-title">Professional Video Editor — Alexandria, Egypt</p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">17</div>
+        <div class="stat-label">سنة</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">منصات</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">إبداع</div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="#portfolio" class="btn-primary">شوف أعمالي</a>
+      <a href="#contact" class="btn-secondary">تواصل معايا</a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<section class="reveal">
+  <div class="section-label">خبراتي</div>
+  <div class="section-title">SKILLS</div>
+  <div class="skills-grid">
+    <div class="skill-card"><div class="skill-icon">🎬</div><div class="skill-name">Video Editing</div></div>
+    <div class="skill-card"><div class="skill-icon">🎨</div><div class="skill-name">Color Grading</div></div>
+    <div class="skill-card"><div class="skill-icon">✂️</div><div class="skill-name">Motion Cuts</div></div>
+    <div class="skill-card"><div class="skill-icon">🔊</div><div class="skill-name">Sound Design</div></div>
+    <div class="skill-card"><div class="skill-icon">📱</div><div class="skill-name">Reels & Shorts</div></div>
+    <div class="skill-card"><div class="skill-icon">⚡</div><div class="skill-name">Fast Delivery</div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<section id="portfolio" class="reveal">
+  <div class="section-label">شغلي</div>
+  <div class="section-title">PORTFOLIO</div>
+  <div class="portfolio-grid">
+
+    <!-- فيديو 1: استبدل الـ placeholder بـ iframe من يوتيوب -->
+    <div class="video-thumb">
+  <video src="auphonic.mp4" controls style="width:100%;height:100%;object-fit:cover;"></video>
+</div>
+   <div class="video-thumb">
+  <video src="Nano or Uno 2.mp4" controls style="width:100%;height:100%;object-fit:cover;"></video>
+</div>
+
+    <!-- فيديو 2 -->
+    <div class="video-thumb">
+  <video src="ramx.mp4" controls style="width:100%;height:100%;object-fit:cover;"></video>
+</div>
+   
+
+    <!-- فيديو 3 -->
+    <div class="video-card">
+      <div class="video-thumb">
+        <div class="video-thumb-placeholder">
+          <div class="play-icon">▶</div>
+          <span>أضف الفيديو هنا</span>
+        </div>
+      </div>
+      <div class="video-info">
+        <div class="video-tag">YouTube Edit</div>
+        <div class="video-title">فيديو 3 — اسم المشروع</div>
+        <div class="video-desc">وصف مختصر للفيديو ونوعه وأدوات المونتاج المستخدمة.</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+<p style="text-align:center; color:#888; font-size:0.95rem; margin-top:2rem;">
+  لو عايز تشوف بقيت أعمالي — 
+  <span style="color:#ff3b00; font-weight:700;">تابع صفحات السوشيال ميديا 👇</span>
+</p>
+<section id="contact" class="reveal">
+  <div class="section-label">تواصل</div>
+  <div class="section-title">CONTACT</div>
+
+  <div class="contact-wrapper">
+    <div class="contact-info">
+      <p>مرحبا! أنا عمر محمد، فيديو إديتور من الإسكندرية. عندي 17 سنة وشغوف بصنع محتوى يأثر. لو عندك مشروع أو تعاون مشترك، تواصل معايا!</p>
+
+      <a href="tel:+201558791003" class="contact-item">
+        <div class="contact-icon" style="background:rgba(255,59,0,0.15);">📞</div>
+        <div class="contact-text">
+          <div class="contact-platform">Phone</div>
+          <div class="contact-handle" dir="ltr">01558791003</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="social-links">
+
+      <a href="https://www.facebook.com/share/18Po85iuBD/" target="_blank" rel="noopener" class="social-link facebook">
+        <div class="social-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#1877F2">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+        </div>
+        <div class="social-link-label">
+          <div>Facebook</div>
+          <div class="social-link-sub">عمر محمد</div>
+        </div>
+        <div class="social-arrow">←</div>
+      </a>
+
+      <a href="https://youtube.com/@omarmohamed_76?si=uOfEpq4RdOnsFl26" target="_blank" rel="noopener" class="social-link youtube">
+        <div class="social-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#FF0000">
+            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+        </div>
+        <div class="social-link-label">
+          <div>YouTube</div>
+          <div class="social-link-sub">@omarmohamed_76</div>
+        </div>
+        <div class="social-arrow">←</div>
+      </a>
+
+      <a href="https://vm.tiktok.com/ZS9Fpyhv7RSR1-OBHS2/" target="_blank" rel="noopener" class="social-link tiktok">
+        <div class="social-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="white">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.67a8.27 8.27 0 0 0 4.84 1.55V6.77a4.85 4.85 0 0 1-1.07-.08z"/>
+          </svg>
+        </div>
+        <div class="social-link-label">
+          <div>TikTok</div>
+          <div class="social-link-sub">عمر محمد</div>
+        </div>
+        <div class="social-arrow">←</div>
+      </a>
+
+    </div>
+  </div>
+  
+</section>
+
+<footer>
+  <p>صُنع بـ<span> ❤ </span>بواسطة <span>عمر محمد</span> © 2025 · Video Editor · Alexandria, Egypt</p>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => io.observe(r));
+</script>
+</body>
+</html>
